@@ -1,1 +1,1 @@
-<script src="indexjs.js" />
+<?php   echo'<script type="text/javascript" src="indexjs.js"></script>' ?>

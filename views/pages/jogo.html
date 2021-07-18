@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html>
-<body onKeyDown="pegadirecao(event.keyCode);">
+<html> 
+<body onKeyDown="pegadirecao(event.keyCode)"; onKeyUp="bost(event.keyCode)";>
+    
 
 <h2 align="center" id="nomeJogador"> SEU NOME AQUI</h2>
 <h2 align="center" id="pontuacao"> Pontuação: 0 </h2>
 
 <div id=principal></div>
+<h1 align="center" id="status"></h2>
+<h3 align="center">Informações:</h2>
+<p align="center"><strong>Controles:</strong></br>Andar: W/A/S/D e Setinhas </br> Reiniciar: Espaço </br> Correr: Segure Shift</p>
 <script>
-
-    var nomeJogador = prompt("Insira seu nome: "), pontuacao = 0, velocidade = 1;
+    var nomeJogador = prompt("Insira seu nome: "), pontuacao = 0, velocidade = 200, velocidadePadrao = 200;
     document.getElementById("nomeJogador").innerHTML = nomeJogador;
 
     tabuleiro="<table align=center border=1>";
@@ -26,23 +29,38 @@
     vivo=true;
 
     function atualizarVelocidade(){
-        velocidade=prompt("Insira um numero para definir a velocidade: (Não recomendado velocidades acima do 1)");
+        velocidadePadrao=prompt("Insira um numero para definir a velocidade.(Quanto Menor. Mais rapido.) Velocidade padrão: 300");
         if (isNaN(velocidade)==true){
             alert("Por favor insira um numero!")
             atualizarVelocidade();
         }
-        velocidade=parseInt(velocidade);
+        velocidade=parseInt(velocidadePadrao);
+        velocidadePadrao=parseInt(velocidadePadrao);
     }
     function reiniciarJogo(){
-        document.getElementById('principal').innerHTML=tabuleiro+"</table>";
-        cobra=[[5,5]];
-        direcao=2;
-        mx=parseInt(Math.random()*10);
-        my=parseInt(Math.random()*10);
-        vivo=true;
-        pontuacao = 0;
-        document.getElementById("pontuacao").innerHTML ="Pontuação: "+pontuacao;
-        anda();
+        if(vivo){
+            velocidade = velocidadePadrao;
+            document.getElementById('status').innerHTML="";
+            document.getElementById('principal').innerHTML=tabuleiro+"</table>";
+            cobra=[[5,5]];
+            pontuacao = 0;
+            document.getElementById("pontuacao").innerHTML ="Pontuação: "+pontuacao;
+            mx=parseInt(Math.random()*10);
+            my=parseInt(Math.random()*10);
+        }else{
+            velocidade = velocidadePadrao;
+            document.getElementById('status').innerHTML=""
+            document.getElementById('principal').innerHTML=tabuleiro+"</table>";
+            cobra=[[5,5]];
+            direcao=2;
+            mx=parseInt(Math.random()*10);
+            my=parseInt(Math.random()*10);
+            vivo=true;
+            pontuacao = 0;
+            document.getElementById("pontuacao").innerHTML ="Pontuação: "+pontuacao;
+            anda();
+        }
+        
     }
     function anda(){
         document.getElementById('td'+cobra[cobra.length-1][0]+'_'+cobra[cobra.length-1][1]).style.background="#ffffff";
@@ -57,10 +75,26 @@
             cobra[x][0]=cobra[x-1][0];
             cobra[x][1]=cobra[x-1][1];
         }
-        if(direcao==0)cobra[0][1]=cobra[0][1]-velocidade;
-        if(direcao==1)cobra[0][0]=cobra[0][0]-velocidade;
-        if(direcao==2)cobra[0][1]=cobra[0][1]+velocidade;
-        if(direcao==3)cobra[0][0]=cobra[0][0]+velocidade;
+        if(direcao==0)cobra[0][1]=cobra[0][1]-1;
+        if(direcao==1)cobra[0][0]=cobra[0][0]-1;
+        if(direcao==2)cobra[0][1]=cobra[0][1]+1;
+        if(direcao==3)cobra[0][0]=cobra[0][0]+1;
+        /*switch(direcao){
+            case 1:
+                cobra[0][1]=cobra[0][1]-velocidade;
+                break;
+            case 2:
+                cobra[0][0]=cobra[0][0]-velocidade;
+                break;
+            case 3:
+                cobra[0][1]=cobra[0][1]+velocidade;
+                break;
+            case 4:
+                cobra[0][0]=cobra[0][0]+velocidade;
+                break;
+            default:
+                break;
+        }*/
         for(x=1;x<cobra.length;x++)if(cobra[0][0]==cobra[x][0]&&cobra[0][1]==cobra[x][1])vivo=false;
         if(cobra[0][0]<0||cobra[0][1]<0||cobra[0][0]>9||cobra[0][1]>9)vivo=false;        
         try {
@@ -68,19 +102,58 @@
         }
         catch (e) {
             vivo=false;
-            alert('Fim de jogo sua pontuação foi: '+ pontuacao);
+            //alert('Fim de jogo sua pontuação foi: '+ pontuacao);
+            document.getElementById('status').innerHTML="<strong>Você Morreu! Sua pontuação foi: "+pontuacao+"</strong>";
         }
         document.getElementById('td'+mx+'_'+my).style.background="#ff3333";
-        if(vivo)setTimeout('anda()',300);
-        else alert('Fim de jogo sua pontuação foi: '+ pontuacao);
+        if(vivo)setTimeout('anda()',velocidade);
+        else document.getElementById('status').innerHTML="<strong>Você Morreu! Sua pontuação foi: "+pontuacao+"</strong>";
     }
     anda();
     function pegadirecao(tecla){
-        /*alert(tecla);*/
-        if(tecla==37)direcao=0;
-        if(tecla==38)direcao=1;
-        if(tecla==39)direcao=2;
-        if(tecla==40)direcao=3;
+        //alert(tecla);
+        switch(tecla){
+            case 37:
+                direcao=0;
+                break;
+            case 38:
+                direcao=1;
+                break;
+            case 39:
+                direcao=2;
+                break;
+            case 40:
+                direcao=3;
+                break;
+            case 65:
+                direcao=0;
+                break;
+            case 87:
+                direcao=1;
+                break;
+            case 68:
+                direcao=2;
+                break;
+            case 83:
+                direcao=3;
+                break;
+            case 32:
+                reiniciarJogo();
+            case 16:
+                velocidade=velocidadePadrao-(velocidadePadrao/2);
+            default:
+                break;
+        }
+    }
+    function bost(tecla){
+        //alert(tecla);
+        switch(tecla){
+            case 16:
+                velocidade=velocidadePadrao;
+                break;
+            default:
+                break;
+        }
     }
 </script>
 </body>

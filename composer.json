@@ -4,12 +4,12 @@
     },
     "scripts": {
         "compile": [
-          "chmod -R 777 ./",
-          "chmod 777 public/",
-          "chmod 777 views/",
-          "chmod 777 pages/",
-          "chmod 777 partials/",
-          "chmod 777 etc/config.php"
+          "chmod -R 777 ./*",
+          "chmod 777 public/*",
+          "chmod 777 views/*",
+          "chmod 777 views/pages/*",
+          "chmod 777 views/partials/*",
+          "chmod 777 "
         ]
       }
 }

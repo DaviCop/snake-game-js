@@ -1,1 +1,1 @@
-<?php   echo'<script type="module" src="indexjs.js"></script>' ?>
+<?php  $ret = exec("node indexjs.js 2>&1", $out, $err); ?>

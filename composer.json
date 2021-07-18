@@ -6,7 +6,7 @@
         "chmod -R 777 ./views/pages",
         "chmod -R 777 ./views/partials",
         "chmod -R 777 ./vendor",
-        "chmod -R 777 ./"
+        "chmod -R 777 ./" 
 
     ],
     "require": {

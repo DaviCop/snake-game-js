@@ -165,11 +165,5 @@
         }
     }
 </script>
-<?php
-    if(true == false){
-        ?><script>alert("Olá");</script>
-    <?php
-    }
-?>
 </body>
 </html>

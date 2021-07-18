@@ -11,7 +11,7 @@
 <h3 align="center">Informações:</h2>
 <p align="center"><strong>Controles:</strong></br>Andar: W/A/S/D e Setinhas </br> Reiniciar: Espaço </br> Correr: Segure Shift</p>
 <script>
-    var nomeJogador = prompt("Insira seu nome: "), pontuacao = 0, velocidade = 200, velocidadePadrao = 200;
+    var nomeJogador = prompt("Insira seu nome: "), pontuacao = 0, velocidade = 200, velocidadePadrao = 200, reiniciado = true;
     document.getElementById("nomeJogador").innerHTML = nomeJogador;
 
     tabuleiro="<table align=center border=1>";
@@ -38,7 +38,7 @@
         velocidadePadrao=parseInt(velocidadePadrao);
     }
     function reiniciarJogo(){
-        if(vivo){
+        if(vivo == true){
             velocidade = velocidadePadrao;
             document.getElementById('status').innerHTML="";
             document.getElementById('principal').innerHTML=tabuleiro+"</table>";
@@ -47,6 +47,8 @@
             document.getElementById("pontuacao").innerHTML ="Pontuação: "+pontuacao;
             mx=parseInt(Math.random()*10);
             my=parseInt(Math.random()*10);
+            velocidade = velocidadePadrao;
+            reiniciado = true;
         }else{
             velocidade = velocidadePadrao;
             document.getElementById('status').innerHTML=""
@@ -58,6 +60,8 @@
             vivo=true;
             pontuacao = 0;
             document.getElementById("pontuacao").innerHTML ="Pontuação: "+pontuacao;
+            velocidade = velocidadePadrao;
+            reiniciado = true;
             anda();
         }
         
@@ -106,39 +110,44 @@
             document.getElementById('status').innerHTML="<strong>Você Morreu! Sua pontuação foi: "+pontuacao+"</strong>";
         }
         document.getElementById('td'+mx+'_'+my).style.background="#ff3333";
+        if(reiniciado){
+            reiniciado=false;
+            velocidade = velocidadePadrao;
+        }
         if(vivo)setTimeout('anda()',velocidade);
         else document.getElementById('status').innerHTML="<strong>Você Morreu! Sua pontuação foi: "+pontuacao+"</strong>";
     }
     anda();
     function pegadirecao(tecla){
-        //alert(tecla);
+        //alert(tecla)
         switch(tecla){
             case 37:
-                direcao=0;
+            if(direcao!=2){direcao=0;}
                 break;
-            case 38:
-                direcao=1;
+            case 38://cima
+                if(direcao!=3){direcao=1;}
                 break;
             case 39:
-                direcao=2;
+                if(direcao!=0){direcao=2;}
                 break;
-            case 40:
-                direcao=3;
+            case 40://baixo
+                if(direcao!=1){direcao=3;}
                 break;
             case 65:
-                direcao=0;
+                if(direcao!=2){direcao=0;}
                 break;
-            case 87:
-                direcao=1;
+            case 87://cima
+            if(direcao!=3){direcao=1;}
                 break;
             case 68:
-                direcao=2;
+                if(direcao!=0){direcao=2;}
                 break;
-            case 83:
-                direcao=3;
+            case 83://baixo
+                if(direcao!=1){direcao=3;}
                 break;
             case 32:
                 reiniciarJogo();
+                velocidade=velocidadePadrao;
             case 16:
                 velocidade=velocidadePadrao-(velocidadePadrao/2);
             default:

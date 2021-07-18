@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html> 
+<body onKeyDown="pegadirecao(event.keyCode)"; onKeyUp="bost(event.keyCode)";>
+    
+
+<h2 align="center" id="nomeJogador"> SEU NOME AQUI</h2>
+<h2 align="center" id="pontuacao"> Pontuação: 0 </h2>
+
+<div id=principal></div>
+<h1 align="center" id="status"></h2>
+<h3 align="center">Informações:</h2>
+<p align="center"><strong>Controles:</strong></br>Andar: W/A/S/D e Setinhas </br> Reiniciar: Espaço </br> Correr: Segure Shift</p>
+<script>
+    var nomeJogador = prompt("Insira seu nome: "), pontuacao = 0, velocidade = 200, velocidadePadrao = 200, reiniciado = true;
+    document.getElementById("nomeJogador").innerHTML = nomeJogador;
+
+    tabuleiro="<table align=center border=1>";
+    for(x=0;x<10;x++){
+        tabuleiro+="<tr>";
+        for(y=0;y<10;y++)
+            tabuleiro+="<td id=td"+x+"_"+y+" style='width:30px; height:30px;'> </td>";
+        tabuleiro+="</tr>";
+    }
+    document.getElementById('principal').innerHTML=tabuleiro+"</table>";
+    cobra=[[5,5]];
+    direcao=2;
+    mx=parseInt(Math.random()*10);
+    my=parseInt(Math.random()*10);
+    vivo=true;
+
+    function atualizarVelocidade(){
+        velocidadePadrao=prompt("Insira um numero para definir a velocidade.(Quanto Menor. Mais rapido.) Velocidade padrão: 300");
+        if (isNaN(velocidade)==true){
+            alert("Por favor insira um numero!")
+            atualizarVelocidade();
+        }
+        velocidade=parseInt(velocidadePadrao);
+        velocidadePadrao=parseInt(velocidadePadrao);
+    }
+    function reiniciarJogo(){
+        if(vivo == true){
+            velocidade = velocidadePadrao;
+            document.getElementById('status').innerHTML="";
+            document.getElementById('principal').innerHTML=tabuleiro+"</table>";
+            cobra=[[5,5]];
+            pontuacao = 0;
+            document.getElementById("pontuacao").innerHTML ="Pontuação: "+pontuacao;
+            mx=parseInt(Math.random()*10);
+            my=parseInt(Math.random()*10);
+            velocidade = velocidadePadrao;
+            reiniciado = true;
+        }else{
+            velocidade = velocidadePadrao;
+            document.getElementById('status').innerHTML=""
+            document.getElementById('principal').innerHTML=tabuleiro+"</table>";
+            cobra=[[5,5]];
+            direcao=2;
+            mx=parseInt(Math.random()*10);
+            my=parseInt(Math.random()*10);
+            vivo=true;
+            pontuacao = 0;
+            document.getElementById("pontuacao").innerHTML ="Pontuação: "+pontuacao;
+            velocidade = velocidadePadrao;
+            reiniciado = true;
+            anda();
+        }
+        
+    }
+    function anda(){
+        document.getElementById('td'+cobra[cobra.length-1][0]+'_'+cobra[cobra.length-1][1]).style.background="#ffffff";
+        if(mx==cobra[cobra.length-1][0]&&my==cobra[cobra.length-1][1]){
+            mx=parseInt(Math.random()*10);
+            my=parseInt(Math.random()*10);
+            cobra[cobra.length]=[10,10];
+            pontuacao += 1;
+            document.getElementById("pontuacao").innerHTML ="Pontuação: "+pontuacao;
+        }
+        for(x=cobra.length-1;x>0;x--){
+            cobra[x][0]=cobra[x-1][0];
+            cobra[x][1]=cobra[x-1][1];
+        }
+        if(direcao==0)cobra[0][1]=cobra[0][1]-1;
+        if(direcao==1)cobra[0][0]=cobra[0][0]-1;
+        if(direcao==2)cobra[0][1]=cobra[0][1]+1;
+        if(direcao==3)cobra[0][0]=cobra[0][0]+1;
+        /*switch(direcao){
+            case 1:
+                cobra[0][1]=cobra[0][1]-velocidade;
+                break;
+            case 2:
+                cobra[0][0]=cobra[0][0]-velocidade;
+                break;
+            case 3:
+                cobra[0][1]=cobra[0][1]+velocidade;
+                break;
+            case 4:
+                cobra[0][0]=cobra[0][0]+velocidade;
+                break;
+            default:
+                break;
+        }*/
+        for(x=1;x<cobra.length;x++)if(cobra[0][0]==cobra[x][0]&&cobra[0][1]==cobra[x][1])vivo=false;
+        if(cobra[0][0]<0||cobra[0][1]<0||cobra[0][0]>9||cobra[0][1]>9)vivo=false;        
+        try {
+            document.getElementById('td'+cobra[0][0]+'_'+cobra[0][1]).style.background="#333333";
+        }
+        catch (e) {
+            vivo=false;
+            //alert('Fim de jogo sua pontuação foi: '+ pontuacao);
+            document.getElementById('status').innerHTML="<strong>Você Morreu! Sua pontuação foi: "+pontuacao+"</strong>";
+        }
+        document.getElementById('td'+mx+'_'+my).style.background="#ff3333";
+        if(reiniciado){
+            reiniciado=false;
+            velocidade = velocidadePadrao;
+        }
+        if(vivo)setTimeout('anda()',velocidade);
+        else document.getElementById('status').innerHTML="<strong>Você Morreu! Sua pontuação foi: "+pontuacao+"</strong>";
+    }
+    anda();
+    function pegadirecao(tecla){
+        //alert(tecla)
+        switch(tecla){
+            case 37:
+            if(direcao!=2){direcao=0;}
+                break;
+            case 38://cima
+                if(direcao!=3){direcao=1;}
+                break;
+            case 39:
+                if(direcao!=0){direcao=2;}
+                break;
+            case 40://baixo
+                if(direcao!=1){direcao=3;}
+                break;
+            case 65:
+                if(direcao!=2){direcao=0;}
+                break;
+            case 87://cima
+            if(direcao!=3){direcao=1;}
+                break;
+            case 68:
+                if(direcao!=0){direcao=2;}
+                break;
+            case 83://baixo
+                if(direcao!=1){direcao=3;}
+                break;
+            case 32:
+                reiniciarJogo();
+                velocidade=velocidadePadrao;
+            case 16:
+                velocidade=velocidadePadrao-(velocidadePadrao/2);
+            default:
+                break;
+        }
+    }
+    function bost(tecla){
+        //alert(tecla);
+        switch(tecla){
+            case 16:
+                velocidade=velocidadePadrao;
+                break;
+            default:
+                break;
+        }
+    }
+</script>
+<?php
+    if(true == false){
+        ?><script>alert("Olá");</script>
+    <?php
+    }
+?>
+</body>
+</html>
